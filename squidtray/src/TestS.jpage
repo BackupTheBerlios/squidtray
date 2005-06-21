@@ -1,0 +1,3 @@
+final int exit = Runtime.getRuntime().exec("net start SquidNT").waitFor();
+System.out.println(exit);
+squidtray.messages.MsgBox();
