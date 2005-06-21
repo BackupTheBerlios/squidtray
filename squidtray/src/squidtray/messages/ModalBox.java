@@ -49,7 +49,7 @@ public class ModalBox extends JDialog implements ActionListener {
 			JButton but4No = new JButton("No");
 			but4No.addActionListener(this);
 			buttonBox.add(but4No);
-			JButton but4Cancel = new JButton("Alors...");
+			JButton but4Cancel = new JButton("Cancel");
 			but4Cancel.addActionListener(this);
 			buttonBox.add(but4Cancel);
 			break;
@@ -68,7 +68,9 @@ public class ModalBox extends JDialog implements ActionListener {
 
 	public void actionPerformed(ActionEvent evt) {
 		dispose();
-		
-		returnValue = 1;
+		/*
+		 * TODO Mettre un switch pour chacun des types de MsgBox.
+		 */
+		returnValue = Boxs.YES;
 	}
 }
