@@ -13,7 +13,7 @@ import javax.swing.JPanel;
 public class ModalBox extends JDialog implements ActionListener {
 	private int returnValue = 0;
 
-	public ModalBox(String stringTitre, String stringMessage, int flagButtons) {
+	public ModalBox( String stringMessage, String stringTitre, int flagButtons) {
 		super();
 		
 		JPanel globalBox = new JPanel(new BorderLayout());
@@ -27,19 +27,24 @@ public class ModalBox extends JDialog implements ActionListener {
 		case 1:
 			JButton but1Ok = new JButton("Ok");
 			but1Ok.addActionListener(this);
+			buttonBox.add(but1Ok);
 			break;
 		case 2:
 			JButton but2Ok = new JButton("Ok");
 			but2Ok.addActionListener(this);
+			buttonBox.add(but2Ok);
 			JButton but2Cancel = new JButton("Cancel");
 			but2Cancel.addActionListener(this);
+			buttonBox.add(but2Cancel);
 			break;
 			
 		case 3:
 			JButton but3Yes = new JButton("Yes");
 			but3Yes.addActionListener(this);
+			buttonBox.add(but3Yes);
 			JButton but3No = new JButton("No");
 			but3No.addActionListener(this);
+			buttonBox.add(but3No);
 			break; 
 			
 		case 4:
@@ -56,7 +61,7 @@ public class ModalBox extends JDialog implements ActionListener {
 		}
 		
 		setContentPane(globalBox);
-		setSize(300,200);
+		setSize(350,150);
 		setTitle(stringTitre);
 		setModal(true);
 	}
