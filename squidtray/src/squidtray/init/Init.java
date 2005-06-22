@@ -8,7 +8,7 @@ import squidtray.user_interface.MainInterface;
 
 import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
-import com.jgoodies.looks.plastic.theme.ExperienceBlue;
+import com.jgoodies.looks.plastic.theme.SkyKrupp;
 
 public class Init {
 
@@ -20,7 +20,7 @@ public class Init {
 	public static void main(String[] args) {
 		
 		try {
-			LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), new ExperienceBlue());
+			LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), new SkyKrupp());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -29,7 +29,7 @@ public class Init {
 		JFrame frmMain = new MainInterface();
 		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-		System.out.println( DialogBoxs.MsgBox("mouette"));
+		System.out.println( DialogBoxs.MsgBox("Un message","Un titre",3));
 		
 	}
 
