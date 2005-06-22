@@ -9,7 +9,12 @@ public class DialogBoxs {
 	}
 	 
 	 public static int MsgBox(String Message, String Title) {
-		 int i = new ModalBox(Title, Message, 4).showDialog();
+		 int i = MsgBox(Message, Title, 1);
+		 return i;
+	 }
+
+	 public static int MsgBox(String Message, String Title, int flagButtons) {
+		 int i = new ModalBox(Message, Title, flagButtons).showDialog();
 		 return i;
 	 }
 
