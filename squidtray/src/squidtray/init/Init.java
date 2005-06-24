@@ -3,7 +3,6 @@ package squidtray.init;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
-import squidtray.messages.DialogBoxs;
 import squidtray.user_interface.MainInterface;
 
 import com.jgoodies.looks.LookUtils;
@@ -28,9 +27,6 @@ public class Init {
 		//Appel de la fenêtre principale.
 		JFrame frmMain = new MainInterface();
 		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
-		System.out.println( DialogBoxs.MsgBox("Un message","Un titre",3));
-		
 	}
 
 }
