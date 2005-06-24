@@ -3,6 +3,7 @@ package squidtray.init;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import squidtray.services.Services;
 import squidtray.user_interface.MainInterface;
 
 import com.jgoodies.looks.LookUtils;
@@ -27,6 +28,10 @@ public class Init {
 		//Appel de la fenêtre principale.
 		JFrame frmMain = new MainInterface();
 		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+		
+		if (Services.Status() == Services.FAIL) {
+			
+		}
 	}
 
 }
