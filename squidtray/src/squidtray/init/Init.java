@@ -28,10 +28,11 @@ public class Init {
 		//Appel de la fenêtre principale.
 		JFrame frmMain = new MainInterface();
 		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		
-		if (Services.Status() == Services.FAIL) {
-			
+		((MainInterface) frmMain).getLabelStatus().setText("SquidTray starts the SquidNT service");
+		Services.Stop();
+		while (Services.Start()== Services.FAIL){
 		}
+		((MainInterface) frmMain).getLabelStatus().setText("SquidNT is started");
 	}
 
 }
