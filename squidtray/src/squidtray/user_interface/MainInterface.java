@@ -2,12 +2,18 @@ package squidtray.user_interface;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTree;
 import javax.swing.tree.DefaultMutableTreeNode;
+
+import squidtray.parser.Parser;
+import sun.security.jca.GetInstance;
 
 public class MainInterface extends JFrame {
 
@@ -39,13 +45,18 @@ public class MainInterface extends JFrame {
 		DefaultMutableTreeNode root = new DefaultMutableTreeNode("SquidTray");
 		DefaultMutableTreeNode basicConf = new DefaultMutableTreeNode("Basic Config");
 		DefaultMutableTreeNode adConf = new DefaultMutableTreeNode("Advanced Config");
+		DefaultMutableTreeNode aclConf = new DefaultMutableTreeNode("ACL");
+		
 		root.add(basicConf);
-		basicConf.add(new DefaultMutableTreeNode("http_port"));
+		root.add(aclConf);
 		root.add(adConf);
-		adConf.add(new DefaultMutableTreeNode("no_cache"));
+		setTree(basicConf,"/squidtray/config/basic.conf");
+		setTree(adConf,"/squidtray/config/advanced.conf");
+		setTree(aclConf,"/squidtray/config/acl.conf");
 		JTree tree = new JTree(root);
 		
-		panelTree.add(tree, BorderLayout.WEST);
+		panelTree.add(tree, BorderLayout.CENTER);
+		
 		setVisible(true);
 		
 	
@@ -56,4 +67,16 @@ public class MainInterface extends JFrame {
 		return label;
 	}
 
+	static private void setTree (DefaultMutableTreeNode node, String confFile) {
+		try {
+			BufferedReader in = new BufferedReader(new FileReader((GetInstance.class.getResource(confFile).getFile())));
+			String str;
+			while ((str = in.readLine()) != null) {
+				if (str != "\n") {
+					Parser config_file = new Parser();
+					node.add(new DefaultMutableTreeNode(str + " - " + config_file.getParam(str)));
+				}
+			}
+		} catch (IOException e) {}
+	}
 }
