@@ -1,4 +1,4 @@
-package squidtray.user_interface;
+package squidtray.user_interface.actions;
 
 import java.awt.Dimension;
 import java.awt.Toolkit;
@@ -6,6 +6,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import javax.swing.JDialog;
+
+import squidtray.user_interface.About;
 
 public class ActionItemHelpAbout implements ActionListener {
 	

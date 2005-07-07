@@ -9,6 +9,8 @@ import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import squidtray.user_interface.actions.ActionAboutOk;
+
 public class About extends JDialog {
 
 	public About() {

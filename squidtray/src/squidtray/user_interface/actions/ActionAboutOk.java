@@ -1,4 +1,4 @@
-package squidtray.user_interface;
+package squidtray.user_interface.actions;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;

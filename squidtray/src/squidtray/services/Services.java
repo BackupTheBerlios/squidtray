@@ -20,6 +20,7 @@ public class Services {
 	public static final int FAIL = 0;
 	public static final int STARTED = 4;
 	public static final int STOPPED = 5;
+	public static final int MAXTIMEOUT = 500;
 	
 	public static int Start() {
 		try {
