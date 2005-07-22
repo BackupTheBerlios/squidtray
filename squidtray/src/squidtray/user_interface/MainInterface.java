@@ -1,32 +1,36 @@
 package squidtray.user_interface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.io.FileWriter;
+import java.util.Iterator;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
-import javax.swing.JScrollBar;
+import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTextPane;
 import javax.swing.JTree;
+import javax.swing.text.Style;
+import javax.swing.text.StyleConstants;
 import javax.swing.text.StyledDocument;
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import squidtray.parser.ConfigParser;
-import sun.security.jca.GetInstance;
+import squidtray.data.DataModel;
+import squidtray.data.DataObject;
 
 public class MainInterface extends JFrame {
 
 	private static JLabel label;
 	
-	public MainInterface() {
+	public MainInterface(DataModel dataModel) {
 		super("Squid Tray");
 		
 		//Définition de l'interface principale.
@@ -41,18 +45,69 @@ public class MainInterface extends JFrame {
 		mainInterface.add(statusBar, BorderLayout.SOUTH);
 		JPanel treePanel = new JPanel(new BorderLayout());
 		JPanel txtPanel = new JPanel(new BorderLayout());
+		
 		JTabbedPane globalPane = new JTabbedPane();
 		globalPane.add(treePanel,"Simple");
 		globalPane.add(txtPanel, "Advanced");
 		
 		//TextPane
 		JTextPane txtConfigPane = new JTextPane();
-		StyledDocument doc = (StyledDocument)txtConfigPane.getDocument();
-		JScrollBar scrollConfigBar = new JScrollBar();
-		insertFile(new File("c:\\squid\\etc\\squid.conf"), doc, scrollConfigBar);
+		JScrollPane scrollConfigPane = new JScrollPane(txtConfigPane);
+		scrollConfigPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
 		
-		txtPanel.add(txtConfigPane,BorderLayout.CENTER);
-		txtPanel.add(scrollConfigBar, BorderLayout.EAST);
+		StyledDocument doc = (StyledDocument)txtConfigPane.getDocument();
+		
+		//Création des styles
+		Style styleStd = doc.addStyle("styleStd",null);
+		StyleConstants.setFontSize(styleStd, 12);
+
+		Style styleKeyword = doc.addStyle("styleKeyword",styleStd);
+		StyleConstants.setBold(styleKeyword,true);
+		StyleConstants.setForeground(styleKeyword, new Color(150,15,15));
+		
+		Style styleArgword1 = doc.addStyle("styleArgword1", styleStd);
+		StyleConstants.setForeground(styleArgword1,new Color(15,20,150));
+		
+		Style styleArgword2 = doc.addStyle("styleArgword2", styleStd);
+		StyleConstants.setForeground(styleArgword2,new Color(115,120,190));
+		
+		Style styleCommword = doc.addStyle("styleCommword", styleStd);
+		StyleConstants.setForeground(styleCommword, new Color(40,130,130));
+		StyleConstants.setItalic(styleCommword, true);
+		
+		//Insertion du texte
+		Iterator iteratorDataModel = dataModel.iterator();
+		Iterator iteratorArgList = null;
+		String argStr;
+		while (iteratorDataModel.hasNext()) {
+			try {
+			DataObject object = (DataObject)iteratorDataModel.next();
+			doc.insertString(doc.getLength(),object.getKeyWord(),styleKeyword);
+			doc.insertString(doc.getLength()," ",null);
+			if (object.getArgWord() != null) {
+				iteratorArgList = object.getArgWord().iterator();
+				int flagColor = 1;
+				while (iteratorArgList.hasNext()) {
+					argStr = (String)iteratorArgList.next();
+					if (flagColor == 1) {
+						doc.insertString(doc.getLength(),argStr + " ",styleArgword1);
+						flagColor = 0;
+					} else {
+						doc.insertString(doc.getLength(),argStr + " ",styleArgword2);
+						flagColor = 1;
+					}
+					
+				}
+			}
+			doc.insertString(doc.getLength(),object.getCommWord(),styleCommword);
+			doc.insertString(doc.getLength(),"\n",null);
+			} catch (Exception e) {
+				System.out.println(e.getMessage());	
+			}
+		}
+		
+		
+		txtPanel.add(scrollConfigPane,BorderLayout.CENTER);
 		
 		globalPane.setTabPlacement(JTabbedPane.TOP);
 		mainInterface.add(globalPane, BorderLayout.CENTER);
@@ -73,9 +128,7 @@ public class MainInterface extends JFrame {
 		root.add(basicConf);
 		root.add(aclConf);
 		root.add(adConf);
-		setTree(basicConf,"/squidtray/config/basic.conf");
-		setTree(adConf,"/squidtray/config/advanced.conf");
-		setTree(aclConf,"/squidtray/config/acl.conf");
+
 		JTree tree = new JTree(root);
 		
 		panelTree.add(tree, BorderLayout.CENTER);
@@ -91,44 +144,54 @@ public class MainInterface extends JFrame {
 	}
 
 	static private void setTree (DefaultMutableTreeNode node, String confFile) {
-		try {
-			int i;
-			BufferedReader in = new BufferedReader(new FileReader((GetInstance.class.getResource(confFile).getFile())));
-			String str;
-			while ((str = in.readLine()) != null) {
-				if (str != "\n") {
-					ConfigParser cParser = new ConfigParser("c:\\squid\\etc\\squid.conf");
-					ArrayList resParam = cParser.getParam(str);
-					
-					if ( resParam.size() == 1) {
-						node.add(new DefaultMutableTreeNode(str + " - " + resParam.get(0)));
-					} else {
-						DefaultMutableTreeNode tmpNode = new DefaultMutableTreeNode(str);
-						for (i = 0; i< resParam.size();i++)
-						{
-							tmpNode.add(new DefaultMutableTreeNode(str + " - " + resParam.get(i)));
-						}
-						node.add(tmpNode);
-					}
-				}
-			}
-		} catch (IOException e) {}
 	}
 	
-	static private void insertFile(File txtFile, StyledDocument doc, JScrollBar scrollBar) {
+	static private void insertFile(File txtFile, StyledDocument doc) {
 		try {
 			BufferedReader in = new BufferedReader(new FileReader(txtFile));
 			String str;
-			int i=1;
+			
+			Style styleStd = doc.addStyle("styleStd", null);
+			StyleConstants.setFontSize(styleStd, 12);
 			
 			while ((str = in.readLine()) != null) {
-				doc.insertString(doc.getLength(),str+"\n",null);
-				i++;
+					doc.insertString(doc.getLength(),str+"\n",styleStd);
 			}
-			scrollBar.setMinimum(0);
-			scrollBar.setMaximum(i);
 		} catch (Exception e) {}
 	}
+
+	static private void syntxColor(StyledDocument doc) {
+		//Definition des styles.
+		Style styleComm = doc.addStyle("styleComm",null);
+		StyleConstants.setItalic(styleComm,true);
+		StyleConstants.setForeground(styleComm, new Color(40,130,130));
+		StyleConstants.setFontSize(styleComm, 12);
+		Style styleStd = doc.addStyle("styleStd", null);
+		StyleConstants.setFontSize(styleStd, 12);
+		//Fin définition des styles.
+		
+		//on recupére le texte et on le met dans un Fichier Temporaire
+		try {
+			String str;
+			File temp = File.createTempFile("color",".tmp");
+			temp.deleteOnExit();
+			BufferedWriter out = new BufferedWriter(new FileWriter(temp));
+			BufferedReader in = new BufferedReader(new FileReader(temp));
+			out.write(doc.getText(0,doc.getLength()));
+			out.close();
+			doc.remove(0,doc.getLength());
+			
+			while ((str = in.readLine()) != null) {
+				if ((str.indexOf("#")) != -1)
+				{
+					doc.insertString(doc.getLength(),str + "\n",styleComm);
+				}else {
+					doc.insertString(doc.getLength(),str + "\n",null);
+				}
+			}
+		} catch ( Exception e) {}
+	}
+	
 }
 
 

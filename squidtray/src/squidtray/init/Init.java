@@ -3,6 +3,8 @@ package squidtray.init;
 import javax.swing.JFrame;
 import javax.swing.WindowConstants;
 
+import squidtray.data.DataModel;
+import squidtray.parser.RegulParser;
 import squidtray.user_interface.MainInterface;
 
 import com.jgoodies.looks.LookUtils;
@@ -15,7 +17,6 @@ public class Init {
 	 * @param args
 	 */
 	
-	
 	public static void main(String[] args) {
 		int i;
 		try {
@@ -24,10 +25,15 @@ public class Init {
 			e.printStackTrace();
 		}
 		
+		DataModel squidDataModel = new DataModel();
+		RegulParser rParser = new RegulParser("c:\\squid\\etc\\squid.conf",squidDataModel);
+		rParser.parseFile();
+		
 		//Appel de la fenêtre principale.
-		JFrame frmMain = new MainInterface();
+		JFrame frmMain = new MainInterface(squidDataModel);
 		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-//		((MainInterface) frmMain).getLabelStatus().setText("SquidTray is starting the SquidNT service");
+		((MainInterface) frmMain).getLabelStatus().setText("SquidTray is starting the SquidNT service");
+		
 //		Services.Stop();
 //		
 //		for (i=0; i< Services.MAXTIMEOUT; i++) {
@@ -37,7 +43,7 @@ public class Init {
 //			}
 //		}
 //		
-//		//On fabrique le nouveau parseur.
-		
+
+
 	}
 }

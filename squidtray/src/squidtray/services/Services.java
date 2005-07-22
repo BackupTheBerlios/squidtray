@@ -61,7 +61,7 @@ public class Services {
 		return FAIL;
 	}
 
-	public static int Kill() {
+	public int Kill() {
 		
 		return FAIL;
 	}
