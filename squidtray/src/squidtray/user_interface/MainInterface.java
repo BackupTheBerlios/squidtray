@@ -4,11 +4,11 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileReader;
-import java.io.FileWriter;
 import java.util.Iterator;
 
 import javax.swing.JFrame;
@@ -82,6 +82,7 @@ public class MainInterface extends JFrame {
 		while (iteratorDataModel.hasNext()) {
 			try {
 			DataObject object = (DataObject)iteratorDataModel.next();
+//			if ( object.getKeyWord()!= null && object.getKeyWord().trim().length() != 0) {
 			doc.insertString(doc.getLength(),object.getKeyWord(),styleKeyword);
 			doc.insertString(doc.getLength()," ",null);
 			if (object.getArgWord() != null) {
@@ -101,6 +102,7 @@ public class MainInterface extends JFrame {
 			}
 			doc.insertString(doc.getLength(),object.getCommWord(),styleCommword);
 			doc.insertString(doc.getLength(),"\n",null);
+//			}
 			} catch (Exception e) {
 				System.out.println(e.getMessage());	
 			}
@@ -132,8 +134,10 @@ public class MainInterface extends JFrame {
 		JTree tree = new JTree(root);
 		
 		panelTree.add(tree, BorderLayout.CENTER);
-		
+		Image icon = Toolkit.getDefaultToolkit().getImage(getClass().getResource("/squidtray/images/icon.png"));
+		setIconImage(icon);		
 		setVisible(true);
+
 		
 	
 	}
@@ -158,38 +162,6 @@ public class MainInterface extends JFrame {
 					doc.insertString(doc.getLength(),str+"\n",styleStd);
 			}
 		} catch (Exception e) {}
-	}
-
-	static private void syntxColor(StyledDocument doc) {
-		//Definition des styles.
-		Style styleComm = doc.addStyle("styleComm",null);
-		StyleConstants.setItalic(styleComm,true);
-		StyleConstants.setForeground(styleComm, new Color(40,130,130));
-		StyleConstants.setFontSize(styleComm, 12);
-		Style styleStd = doc.addStyle("styleStd", null);
-		StyleConstants.setFontSize(styleStd, 12);
-		//Fin définition des styles.
-		
-		//on recupére le texte et on le met dans un Fichier Temporaire
-		try {
-			String str;
-			File temp = File.createTempFile("color",".tmp");
-			temp.deleteOnExit();
-			BufferedWriter out = new BufferedWriter(new FileWriter(temp));
-			BufferedReader in = new BufferedReader(new FileReader(temp));
-			out.write(doc.getText(0,doc.getLength()));
-			out.close();
-			doc.remove(0,doc.getLength());
-			
-			while ((str = in.readLine()) != null) {
-				if ((str.indexOf("#")) != -1)
-				{
-					doc.insertString(doc.getLength(),str + "\n",styleComm);
-				}else {
-					doc.insertString(doc.getLength(),str + "\n",null);
-				}
-			}
-		} catch ( Exception e) {}
 	}
 	
 }

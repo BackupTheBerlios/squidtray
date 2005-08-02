@@ -1,49 +1,39 @@
 package squidtray.init;
 
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
 
-import squidtray.data.DataModel;
-import squidtray.parser.RegulParser;
-import squidtray.user_interface.MainInterface;
+import squidtray.user_interface.Splash;
 
 import com.jgoodies.looks.LookUtils;
 import com.jgoodies.looks.plastic.PlasticXPLookAndFeel;
 import com.jgoodies.looks.plastic.theme.SkyKrupp;
 
 public class Init {
-
 	/**
 	 * @param args
 	 */
 	
 	public static void main(String[] args) {
-		int i;
 		try {
 			LookUtils.setLookAndTheme(new PlasticXPLookAndFeel(), new SkyKrupp());
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
+        
+		//Appel de la fenêtre splash
+		JFrame splash = new Splash();
+		splash.setVisible(true);
 		
-		DataModel squidDataModel = new DataModel();
-		RegulParser rParser = new RegulParser("c:\\squid\\etc\\squid.conf",squidDataModel);
-		rParser.parseFile();
-		
-		//Appel de la fenêtre principale.
-		JFrame frmMain = new MainInterface(squidDataModel);
-		frmMain.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-		((MainInterface) frmMain).getLabelStatus().setText("SquidTray is starting the SquidNT service");
-		
-//		Services.Stop();
-//		
-//		for (i=0; i< Services.MAXTIMEOUT; i++) {
-//			if ((Services.Start())!=Services.FAIL) {
-//				((MainInterface) frmMain).getLabelStatus().setText("SquidNT is started");
-//				break;
-//			}
-//		}
-//		
-
+        Thread startup = new StartupThread(splash);
+        startup.start();
+        
+        try {
+            startup.join();
+        } catch (Exception ignore) {
+        }
 
 	}
+	
 }
+	
+

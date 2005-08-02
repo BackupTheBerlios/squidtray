@@ -1,8 +1,10 @@
 package squidtray.user_interface;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
@@ -17,8 +19,11 @@ public class About extends JDialog {
 		super();
 		
 		JPanel aboutPannel = new JPanel(new BorderLayout());
-		ImageIcon image = new ImageIcon(getClass().getResource("/squidtray/images/logo.gif"));
+		ImageIcon image = new ImageIcon(getClass().getResource("/squidtray/images/splash.png"));
 		JLabel messageLabel = new JLabel(image, JLabel.CENTER);
+        messageLabel.setBorder(BorderFactory.createLineBorder(Color.GRAY, 2));
+        messageLabel.setDoubleBuffered(false);
+
 		aboutPannel.add(messageLabel,BorderLayout.CENTER);
 		
 		JPanel buttonPannel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
@@ -30,7 +35,7 @@ public class About extends JDialog {
 		
 		setTitle("About SquidTray");
 		setContentPane(aboutPannel);
-		setSize(450,250);
+		pack();
 		setResizable(false);
 		setVisible(true);
 		
